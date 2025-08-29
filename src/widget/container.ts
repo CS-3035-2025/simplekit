@@ -22,6 +22,16 @@ export class SKContainer extends SKElement {
         : new Layout.FixedLayout();
   }
 
+  protected _radius = 0;
+  set radius(r: number){
+    this._radius = r;
+  }
+  get radius(){
+    return this._radius;
+  }
+
+
+
   //#region managing children
 
   private _children: SKElement[] = [];
@@ -86,30 +96,29 @@ export class SKContainer extends SKElement {
   draw(gc: CanvasRenderingContext2D) {
     gc.save();
     // set coordinate system to padding box
-    gc.translate(this.x, this.y);
     gc.translate(this.margin, this.margin);
+    const w = this.paddingBox.width;
+    const h = this.paddingBox.height;
 
     // draw background colour if set
     if (this.fill) {
+      gc.beginPath();
+      gc.roundRect(this.x, this.y, w, h, this._radius);
       gc.fillStyle = this.fill;
-      gc.fillRect(
-        0,
-        0,
-        this.paddingBox.width,
-        this.paddingBox.height
-      );
+      gc.fill();
     }
 
     // draw border if set
     if (this.border) {
       gc.strokeStyle = this.border;
       gc.lineWidth = 1;
-      gc.strokeRect(
-        0,
-        0,
-        this.paddingBox.width,
-        this.paddingBox.height
-      );
+      // gc.strokeRect(
+      //   0,
+      //   0,
+      //   this.paddingBox.width,
+      //   this.paddingBox.height
+      // );
+      gc.stroke();
     }
 
     gc.restore();

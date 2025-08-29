@@ -40,6 +40,30 @@ export class SKButton extends SKElement {
     this.sizeChanged();
   }
 
+  protected _radius = 4;
+  set radius(r: number) {
+    this._radius = r;
+  }
+  get radius() {
+    return this._radius;
+  }
+
+  protected _fontColour = Style.fontColour;
+  set fontColour(c: string) {
+    this._fontColour = c;
+  }
+  get fontColour() {
+    return this._fontColour;
+  }
+
+  protected _highlightColour = Style.highlightColour;
+  set highlightColour(hc: string){
+    this._highlightColour = hc;
+  }
+  get highlightColour(){
+    return this._highlightColour;
+  }
+
   updateContentSize() {
     if (!this.recalculateSize) return;
 
@@ -100,17 +124,17 @@ export class SKButton extends SKElement {
     // thick highlight rect
     if (this.state == "hover" || this.state == "down") {
       gc.beginPath();
-      gc.roundRect(this.x, this.y, w, h, 4);
-      gc.strokeStyle = Style.highlightColour;
+      gc.roundRect(this.x, this.y, w, h, this.radius);
+      gc.strokeStyle = this._highlightColour;
       gc.lineWidth = 8;
       gc.stroke();
     }
 
     // normal background
     gc.beginPath();
-    gc.roundRect(this.x, this.y, w, h, 4);
+    gc.roundRect(this.x, this.y, w, h, this.radius);
     gc.fillStyle =
-      this.state == "down" ? Style.highlightColour : this.fill;
+      this.state == "down" ? this._highlightColour : this.fill;
     gc.strokeStyle = this.border;
     // change fill to show down state
     gc.lineWidth = this.state == "down" ? 4 : 2;
@@ -120,7 +144,7 @@ export class SKButton extends SKElement {
 
     // button label
     gc.font = this._font;
-    gc.fillStyle = this.border;
+    gc.fillStyle = this._fontColour;
     gc.textAlign = "center";
     gc.textBaseline = "middle";
     gc.fillText(this.text, this.x + w / 2, this.y + h / 2);

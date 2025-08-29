@@ -51,6 +51,22 @@ export class SKLabel extends SKElement {
     this.sizeChanged();
   }
 
+  protected _radius = 0;
+  set radius(r: number){
+    this._radius = r;
+  }
+  get radius(){
+    return this._radius;
+  }
+
+  protected _fontColour = Style.fontColour;
+  set fontColour(c: string) {
+    this._fontColour = c;
+  }
+  get fontColour() {
+    return this._fontColour;
+  }
+
   updateContentSize() {
     if (!this.recalculateSize) return;
 
@@ -102,44 +118,46 @@ export class SKLabel extends SKElement {
     const w = this.paddingBox.width;
     const h = this.paddingBox.height;
 
-    gc.translate(this.x, this.y);
+    //gc.translate(this.x, this.y);
     gc.translate(this.margin, this.margin);
 
-    if (this.fill) {
-      gc.fillStyle = this.fill;
-      gc.fillRect(0, 0, w, h);
+    if(this.fill){
+      gc.beginPath();
+      gc.roundRect(this.x, this.y, w, h, this._radius);
+      gc.fillStyle =  this.fill;
+      gc.fill();
     }
 
     if (this.border) {
       gc.strokeStyle = this.border;
       gc.lineWidth = 1;
-      gc.strokeRect(0, 0, w, h);
+      gc.stroke();
     }
 
     // render text
     gc.font = this.font;
-    gc.fillStyle = "black";
+    gc.fillStyle = this._fontColour;
     gc.textBaseline = "middle";
 
-    // clipping rectangle
-    gc.beginPath();
-    gc.rect(0, 0, w, h);
-    gc.clip();
+    // // clipping rectangle
+    // gc.beginPath();
+    // gc.rect(0, 0, w, h);
+    // gc.clip();
 
     switch (this.align) {
       case "left":
         gc.textAlign = "left";
-        gc.fillText(this.text, this.padding, h / 2);
+        gc.fillText(this.text, this.x + this.padding, this.y + h / 2);
 
         break;
       case "centre":
         gc.textAlign = "center";
-        gc.fillText(this.text, w / 2, h / 2);
+        gc.fillText(this.text, this.x + w / 2, this.y + h / 2);
 
         break;
       case "right":
         gc.textAlign = "right";
-        gc.fillText(this.text, w - this.padding, h / 2);
+        gc.fillText(this.text, this.x + w - this.padding, this.y + h / 2);
 
         break;
     }

@@ -36,6 +36,31 @@ export class SKTextfield extends SKElement {
     this.sizeChanged();
   }
 
+  protected _radius = 0;
+  set radius(r: number) {
+    this._radius = r;
+  }
+  get radius() {
+    return this._radius;
+  }
+
+  protected _fontColour = Style.fontColour;
+  set fontColour(c: string) {
+    this._fontColour = c;
+  }
+  get fontColour() {
+    return this._fontColour;
+  }
+
+  protected _highlightColour = Style.highlightColour;
+  set highlightColour(hc: string){
+    this._highlightColour = hc;
+  }
+  get highlightColour(){
+    return this._highlightColour
+  }
+
+
   updateContentSize() {
     const m = measureText(this.text, this._font);
 
@@ -125,16 +150,16 @@ export class SKTextfield extends SKElement {
     // thick highlight rect
     if (this.state == "hover") {
       gc.beginPath();
-      gc.rect(0, 0, w, h);
-      gc.strokeStyle = Style.highlightColour;
+      gc.roundRect(0, 0, w, h,this._radius);
+      gc.strokeStyle = this._highlightColour;
       gc.lineWidth = 8;
       gc.stroke();
     }
 
     // border
     gc.beginPath();
-    gc.rect(0, 0, w, h);
-    gc.fillStyle = "white";
+    gc.roundRect(0, 0, w, h, this._radius);
+    gc.fillStyle = this.fill;
     gc.fill();
     gc.lineWidth = 1;
     gc.strokeStyle = this.focus ? "mediumblue" : "black";
@@ -145,7 +170,7 @@ export class SKTextfield extends SKElement {
 
     // text
     gc.font = this.font;
-    gc.fillStyle = "black";
+    gc.fillStyle = this._fontColour;
     gc.textBaseline = "middle";
     gc.textAlign = "left";
     gc.fillText(this.text, this.padding, h / 2);
